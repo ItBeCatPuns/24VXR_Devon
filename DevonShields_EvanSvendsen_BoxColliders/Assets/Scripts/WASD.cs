@@ -17,6 +17,7 @@ public class WASD : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         int x = 0;
         int y = 0;
 

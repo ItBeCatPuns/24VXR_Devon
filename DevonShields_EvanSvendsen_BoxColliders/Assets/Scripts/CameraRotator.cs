@@ -10,6 +10,8 @@ public class CameraRotator : MonoBehaviour
 
     void Update()
     {
+        if (Time.frameCount < 1) return;
+
         var x = Input.GetAxis("Mouse X");
         var y = -Input.GetAxis("Mouse Y");
 

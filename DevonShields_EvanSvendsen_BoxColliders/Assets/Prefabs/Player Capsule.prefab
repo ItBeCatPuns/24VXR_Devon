@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8288990784237317739}
   - component: {fileID: 2612812702786520706}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: Mirror Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
