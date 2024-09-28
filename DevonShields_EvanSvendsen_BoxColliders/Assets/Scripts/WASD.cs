@@ -30,6 +30,7 @@ public class WASD : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
             x--;
 
-        character.Move(speed * Time.deltaTime * new Vector3(x, 0, y));
+        var inputNormalized = (transform.forward * x + transform.right * -y).normalized;
+        character.Move(inputNormalized * speed * Time.deltaTime);
     }
 }
