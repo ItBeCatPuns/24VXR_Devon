@@ -22,6 +22,7 @@ public class WASD : MonoBehaviour
         int x = 0;
         int y = 0;
 
+        //Get the input vector
         if (Input.GetKey(KeyCode.W))
             y++;
         if (Input.GetKey(KeyCode.S))
@@ -32,7 +33,10 @@ public class WASD : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
             x--;
 
+        bool running = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+
+        //Normalize the input vector and the player direction
         var inputNormalized = (transform.forward * x + transform.right * -y).normalized;
-        character.Move(inputNormalized * speed * Time.deltaTime);
+        character.Move(inputNormalized * speed * (running ? 2f : 1f) * Time.deltaTime);
     }
 }

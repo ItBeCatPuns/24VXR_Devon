@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doorAnimator: {fileID: 963128985}
-  chicken: {fileID: 0}
+  chicken: {fileID: 8300000, guid: 3f48d871d0a48c848b66afc78d435f9c, type: 3}
   channel: {fileID: 56352089}
 --- !u!82 &56352089
 AudioSource:

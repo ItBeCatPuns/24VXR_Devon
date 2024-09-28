@@ -15,6 +15,7 @@ public class CameraRotator : MonoBehaviour
     {
         if (Time.frameCount < 1) return;
 
+        //Get the axis for the input
         var x = Input.GetAxis("Mouse X");
         var y = -Input.GetAxis("Mouse Y");
 
