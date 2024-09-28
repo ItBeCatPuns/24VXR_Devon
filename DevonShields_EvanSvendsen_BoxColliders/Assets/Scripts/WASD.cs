@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     Added to the player to move them using WASD keys.
+/// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class WASD : MonoBehaviour
 {
@@ -14,10 +17,8 @@ public class WASD : MonoBehaviour
         character = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
         int x = 0;
         int y = 0;
 

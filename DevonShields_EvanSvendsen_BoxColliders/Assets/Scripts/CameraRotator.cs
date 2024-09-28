@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+///     Added to the player to control the camera rotation.
+/// </summary>
 public class CameraRotator : MonoBehaviour
 {
     [SerializeField] private Transform characterPivot;

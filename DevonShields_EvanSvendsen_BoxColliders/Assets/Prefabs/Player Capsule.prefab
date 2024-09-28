@@ -279,6 +279,7 @@ GameObject:
   - component: {fileID: 4868656144587340080}
   - component: {fileID: 8968491872245515460}
   - component: {fileID: 8970990681513919992}
+  - component: {fileID: 7057694828629435735}
   m_Layer: 7
   m_Name: Player Capsule
   m_TagString: Untagged
@@ -407,3 +408,16 @@ MonoBehaviour:
   characterPivot: {fileID: 6438503257496121876}
   cameraPivot: {fileID: 4842771531873315326}
   rotationSpeed: 500
+--- !u!114 &7057694828629435735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7400157694196776946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db17df8ca776cdc4da8cd90e95481c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info: {fileID: 0}
