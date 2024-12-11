@@ -5,7 +5,7 @@ using UnityEngine;
 public class FryingPan : MonoBehaviour
 {
     public int panContents = 0;
-    private int panSlot = 0;
+    private int panSlot = 0; // Tracks the number of ingredients added
     private int RecipeValue = 0;
     private int generated = 0;
 
@@ -15,9 +15,16 @@ public class FryingPan : MonoBehaviour
     public GameObject[] Images;
     public int GameScore;
 
+    public bool canAddIngredients = true; // Allows/disallows adding ingredients
+
+    void Start()
+    {
+        // No confirmation logic here now
+    }
+
     void Update()
     {
-        if (generated == 0)
+        if (generated == 0 && canAddIngredients)
         {
             GenerateRecipe();
         }
@@ -45,13 +52,18 @@ public class FryingPan : MonoBehaviour
 
     public void addIngredient(IngredientType type)
     {
-        if (panSlot < 3)
+        if (!canAddIngredients)
+        {
+            Debug.Log("Cannot add ingredients. Timer has ended.");
+            return;
+        }
+
+        if (panSlot < 3) // Limit to 3 ingredients
         {
             // Instantiate the ingredient in the correct pan slot
             GameObject ingredient = Instantiate(Prefabs[(int)type], panspawn[panSlot].position, Quaternion.identity);
             ingredient.transform.SetParent(panspawn[panSlot]); // Set as child of the pan slot
             ingredient.transform.localScale = new Vector3(2f, 2f, 2f); // Example: Scale down to 50%
-
 
             // Update panContents value based on slot
             if (panSlot == 0) panContents += (int)type * 100;
@@ -61,36 +73,46 @@ public class FryingPan : MonoBehaviour
             Debug.Log($"Pan Contents: {panContents}");
             panSlot++;
         }
-
-        if (panSlot >= 3)
+        else
         {
-            CheckRecipe();
+            Debug.Log("Pan is full! Click the confirm object to confirm the recipe.");
         }
     }
 
-    private void CheckRecipe()
+    public void ConfirmRecipe()
     {
-        if (RecipeValue == panContents)
+        if (panSlot == 3) // Only confirm if exactly 3 ingredients are present
         {
-            int NetGain = Random.Range(75, 125);
-            GameScore += NetGain;
-            Debug.Log($"Correct Recipe! Score: {GameScore}");
+            // Check if the recipe is correct
+            if (RecipeValue == panContents)
+            {
+                int NetGain = Random.Range(75, 125);
+                GameScore += NetGain;
+                Debug.Log($"Correct Recipe! Score: {GameScore}");
+
+                // Clear the pan after confirming
+                ClearPan();
+                ClearRecipeUI();
+            }
+            else
+            {
+                Debug.Log("Wrong Recipe! No score awarded.");
+            }
+
+            // Reset the pan and contents for the next recipe
+            panSlot = 0;
+            panContents = 0;
+            generated = 0; // Allow new recipe generation
         }
         else
         {
-            Debug.Log("Wrong Recipe!");
+            Debug.Log("Add 3 ingredients before confirming the recipe.");
         }
-
-        // Clear the pan and reset
-        ClearPan();
-        ClearRecipeUI();
-        panSlot = 0;
-        panContents = 0;
-        generated = 0; // Allow new recipe generation
     }
 
     private void ClearPan()
     {
+        // Clear all ingredients in the pan
         foreach (Transform spawnPoint in panspawn)
         {
             foreach (Transform child in spawnPoint)
@@ -102,6 +124,7 @@ public class FryingPan : MonoBehaviour
 
     private void ClearRecipeUI()
     {
+        // Clear recipe UI elements
         foreach (Transform child in UISpawn)
         {
             foreach (Transform uiElement in child)

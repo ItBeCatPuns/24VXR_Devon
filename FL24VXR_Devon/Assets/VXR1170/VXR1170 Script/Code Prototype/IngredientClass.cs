@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class IngredientClass : MonoBehaviour
 {
-    public FryingPan FryingPan;
-    public IngredientType IngType;
-    
-    // the code that makes clicking my ingredients a breeze
+    public FryingPan FryingPan;       // Reference to the FryingPan script
+    public IngredientType IngType;   // Ingredient type associated with this object
+
+    // Handles ingredient clicks
     public void OnMouseDown()
     {
-        FryingPan.addIngredient(IngType);
+        // Check if ingredients can still be added
+        if (FryingPan != null && FryingPan.canAddIngredients)
+        {
+            FryingPan.addIngredient(IngType);
+        }
+        else
+        {
+            Debug.Log("Cannot add ingredients. Timer has ended.");
+        }
     }
 }
