@@ -2,21 +2,14 @@ using UnityEngine;
 
 public class KeyPickup : MonoBehaviour
 {
-    // Reference to track if the player has a key
-    public bool playerHasKey;
+    public bool PlayerHasKey = false; // Set to true when the player picks up the key
 
-    // Reference to the player GameObject
-    public GameObject player;
-
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        // Check if the colliding object is the specified player
-        if (collision.gameObject == player)
+        if (other.CompareTag("Player")) // Ensure it's the player colliding
         {
-            // Set the playerHasKey variable to true
-            playerHasKey = true;
-
-            // Remove the key object from the scene
+            PlayerHasKey = true;
+            // Optionally, destroy the key object to indicate it's been picked up
             Destroy(gameObject);
         }
     }
