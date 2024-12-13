@@ -7,11 +7,10 @@ public class MazeGenerator : MonoBehaviour
     public int height = 10; // Maze height
     public GameObject wallPrefab; // Prefab for walls
     public GameObject pathPrefab; // Prefab for regular pathways
-    public GameObject correctPathPrefab; // Prefab for the correct path
+    public GameObject keyPrefab; // Prefab for the key
     public float cellSize = 1.0f; // Size of each cell
 
     private int[,] maze; // 0 = Path, 1 = Wall
-    private List<Vector2Int> solutionPath; // List to store the correct path
 
     void Start()
     {
@@ -22,7 +21,6 @@ public class MazeGenerator : MonoBehaviour
     void GenerateMaze()
     {
         maze = new int[width, height];
-        solutionPath = new List<Vector2Int>();
 
         // Initialize all cells as walls
         for (int x = 0; x < width; x++)
@@ -33,31 +31,28 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
-        // Define entrance and exit
-        Vector2Int entrance = new Vector2Int(0, height - 3); // 2 cells down from the top-left corner
-        Vector2Int exit = new Vector2Int(width - 3, 0); // 2 cells left of the bottom-right corner
-
-        // Ensure (width - 3, 1) is a path
+        // Ensure the exit block is not blocked by random generation
         Vector2Int guaranteedPathCell = new Vector2Int(width - 3, 1);
         maze[guaranteedPathCell.x, guaranteedPathCell.y] = 0;
 
-        // Clear entrance and exit
+        // Define entrance, exit, and key location
+        Vector2Int entrance = new Vector2Int(0, height - 3); // 2 cells down from the top-left corner
+        Vector2Int exit = new Vector2Int(width - 3, 0); // 2 cells left of the bottom-right corner
+        Vector2Int keyLocation = new Vector2Int(width / 2, height / 2); // Key in the center of the maze
+
+        // Clear entrance, exit, and key location
         maze[entrance.x, entrance.y] = 0;
         maze[exit.x, exit.y] = 0;
+        maze[keyLocation.x, keyLocation.y] = 0;
 
-        // Start the maze generation and mark the solution path
+        // Start the maze generation
         Stack<Vector2Int> stack = new Stack<Vector2Int>();
         stack.Push(entrance);
         maze[entrance.x, entrance.y] = 0;
-        solutionPath.Add(entrance);
 
         while (stack.Count > 0)
         {
             Vector2Int current = stack.Peek();
-            if (current == exit)
-            {
-                break; // Exit reached, solution path is complete
-            }
 
             List<Vector2Int> neighbors = GetUnvisitedNeighbors(current);
 
@@ -67,7 +62,6 @@ public class MazeGenerator : MonoBehaviour
                 maze[(current.x + chosen.x) / 2, (current.y + chosen.y) / 2] = 0; // Remove wall between cells
                 maze[chosen.x, chosen.y] = 0;
                 stack.Push(chosen);
-                solutionPath.Add(chosen);
             }
             else
             {
@@ -76,10 +70,10 @@ public class MazeGenerator : MonoBehaviour
         }
 
         // Ensure a single solid border
-        CreateSolidBorder(entrance, exit, guaranteedPathCell);
+        CreateSolidBorder(entrance, exit);
     }
 
-    void CreateSolidBorder(Vector2Int entrance, Vector2Int exit, Vector2Int guaranteedPathCell)
+    void CreateSolidBorder(Vector2Int entrance, Vector2Int exit)
     {
         for (int x = 0; x < width; x++)
         {
@@ -92,10 +86,9 @@ public class MazeGenerator : MonoBehaviour
             maze[width - 1, y] = 1; // Right edge
         }
 
-        // Keep entrance, exit, and guaranteed path cell clear
+        // Keep entrance and exit clear
         maze[entrance.x, entrance.y] = 0;
         maze[exit.x, exit.y] = 0;
-        maze[guaranteedPathCell.x, guaranteedPathCell.y] = 0;
     }
 
     List<Vector2Int> GetUnvisitedNeighbors(Vector2Int cell)
@@ -124,24 +117,25 @@ public class MazeGenerator : MonoBehaviour
 
     void DrawMaze()
     {
+        Vector2Int keyLocation = new Vector2Int(width / 2, height / 2); // Key location in the center
+
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 GameObject prefab;
 
-                // Check if this cell is part of the correct path
-                if (solutionPath.Contains(new Vector2Int(x, y)))
+                if (maze[x, y] == 1) // Wall
                 {
-                    prefab = correctPathPrefab; // Use correct path prefab
+                    prefab = wallPrefab;
                 }
-                else if (maze[x, y] == 0)
+                else if (x == keyLocation.x && y == keyLocation.y) // Key location
                 {
-                    prefab = pathPrefab; // Use regular path prefab
+                    prefab = keyPrefab;
                 }
-                else
+                else // Regular path
                 {
-                    prefab = wallPrefab; // Use wall prefab
+                    prefab = pathPrefab;
                 }
 
                 Instantiate(prefab, new Vector3(x * cellSize, 0, y * cellSize), Quaternion.identity, transform);
